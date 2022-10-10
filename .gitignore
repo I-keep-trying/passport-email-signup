@@ -4,3 +4,6 @@ res.js
 node_modules
 package-lock.json
 .rest
+sessions
+app.js
+config

@@ -1,4 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+const body = (name, email, link, data) => {
+  return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
   <html data-editor-version="2" xmlns="http://www.w3.org/1999/xhtml">
     <head>
       <meta
@@ -162,8 +163,6 @@
                                     width="100%"
                                     role="module"
                                     data-type="columns"
-                                    style="padding: 30px 20px 30px 20px"
-                                    bgcolor="#f6f6f6"
                                     data-distribution="1"
                                   >
                                     <tbody>
@@ -187,7 +186,7 @@
                                               <tr>
                                                 <td
                                                   style="
-                                                    padding: 0px;
+                                                    padding-bottom: 100px;
                                                     margin: 0px;
                                                     border-spacing: 0;
                                                   "
@@ -211,7 +210,6 @@
                                                               0px;
                                                           "
                                                           role="module-content"
-                                                          bgcolor=""
                                                         ></td>
                                                       </tr>
                                                     </tbody>
@@ -232,8 +230,8 @@
                                                       <tr>
                                                         <td
                                                           style="
-                                                            padding: 50px 30px
-                                                              18px 30px;
+                                                            padding: 0px 30px 18px
+                                                              30px;
                                                             line-height: 36px;
                                                             text-align: inherit;
                                                             background-color: #ffffff;
@@ -250,8 +248,14 @@
                                                                 text-align: center;
                                                               "
                                                             >
-                                                              <span style="font-size: 30px;">
-                                                                Did you sign up for usefulapp.com, ${name}?
+                                                              <br />
+                                                              <span
+                                                                style="
+                                                                  font-size: 23px;
+                                                                "
+                                                                >We're verifying a
+                                                                recent sign-in for
+                                                                ${email}
                                                               </span>
                                                             </div>
                                                             <div></div>
@@ -260,6 +264,208 @@
                                                       </tr>
                                                     </tbody>
                                                   </table>
+                                                  <!-- Table for user data -->
+                                                  <table
+                                                    class="module"
+                                                    role="module"
+                                                    data-type="text"
+                                                    cellpadding="0"
+                                                    cellspacing="0"
+                                                    style="
+                                                      width: 70%;
+                                                      table-layout: fixed;
+                                                      border: 0px solid black;
+                                                      margin-left: auto;
+                                                      margin-right: auto;
+                                                      font-size: 12px;
+                                                      overflow-x: auto;
+                                                    "
+                                                  >
+                                                    <tbody>
+                                                      <tr
+                                                        style="
+                                                          border-bottom: 1px solid
+                                                            #ddd;
+                                                        "
+                                                      >
+                                                        <td
+                                                          style="
+                                                            width: 30%;
+                                                            background-color: #ffffff;
+                                                            text-align: left;
+                                                            padding-bottom: 5px;
+                                                          "
+                                                        >
+                                                          City:
+                                                        </td>
+                                                        <td
+                                                          style="
+                                                            width: 70%;
+                                                            background-color: #ffffff;
+                                                          "
+                                                        >
+                                                          ${data.city}
+                                                        </td>
+                                                      </tr>
+                                                      <tr
+                                                        style="
+                                                          border-bottom: 1px solid
+                                                            #ddd;
+                                                        "
+                                                      >
+                                                        <td
+                                                          style="
+                                                            width: 90%;
+                                                            background-color: #ffffff;
+                                                            text-align: left;
+                                                            padding-bottom: 5px;
+                                                            padding-top: 5px;
+                                                          "
+                                                        >
+                                                          State:
+                                                        </td>
+                                                        <td
+                                                          style="
+                                                            width: 90%;
+                                                            background-color: #ffffff;
+                                                          "
+                                                        >
+                                                          ${data.state}
+                                                        </td>
+                                                      </tr>
+                                                      <tr
+                                                        style="
+                                                          border-bottom: 1px solid
+                                                            #ddd;
+                                                        "
+                                                      >
+                                                        <td
+                                                          style="
+                                                            width: 90%;
+                                                            background-color: #ffffff;
+                                                            text-align: left;
+                                                            padding-bottom: 5px;
+                                                            padding-top: 5px;
+                                                          "
+                                                        >
+                                                          Country:
+                                                        </td>
+                                                        <td
+                                                          style="
+                                                            width: 90%;
+                                                            background-color: #ffffff;
+                                                          "
+                                                        >
+                                                          ${data.country}
+                                                        </td>
+                                                      </tr>
+                                                      <tr
+                                                        style="
+                                                          border-bottom: 1px solid
+                                                            #ddd;
+                                                        "
+                                                      >
+                                                        <td
+                                                          style="
+                                                            width: 90%;
+                                                            background-color: #ffffff;
+                                                            text-align: left;
+                                                            padding-bottom: 5px;
+                                                            padding-top: 5px;
+                                                          "
+                                                        >
+                                                          IP:
+                                                        </td>
+                                                        <td
+                                                          style="
+                                                            width: 90%;
+                                                            background-color: #ffffff;
+                                                          "
+                                                        >
+                                                          ${data.IP}
+                                                        </td>
+                                                      </tr>
+                                                      <tr
+                                                        style="
+                                                          border-bottom: 1px solid
+                                                            #ddd;
+                                                        "
+                                                      >
+                                                        <td
+                                                          style="
+                                                            width: 90%;
+                                                            background-color: #ffffff;
+                                                            text-align: left;
+                                                            padding-bottom: 5px;
+                                                            padding-top: 5px;
+                                                          "
+                                                        >
+                                                          OS:
+                                                        </td>
+                                                        <td
+                                                          style="
+                                                            width: 90%;
+                                                            background-color: #ffffff;
+                                                          "
+                                                        >
+                                                          ${data.os}
+                                                        </td>
+                                                      </tr>
+                                                      <tr
+                                                        style="
+                                                          border-bottom: 1px solid
+                                                            #ddd;
+                                                        "
+                                                      >
+                                                        <td
+                                                          style="
+                                                            width: 90%;
+                                                            background-color: #ffffff;
+                                                            text-align: left;
+                                                            padding-bottom: 5px;
+                                                            padding-top: 5px;
+                                                          "
+                                                        >
+                                                          Browser:
+                                                        </td>
+                                                        <td
+                                                          style="
+                                                            width: 90%;
+                                                            background-color: #ffffff;
+                                                          "
+                                                        >
+                                                          ${data.browser}
+                                                        </td>
+                                                      </tr>
+                                                      <tr
+                                                        style="
+                                                          border-bottom: 1px solid
+                                                            #ddd;
+                                                        "
+                                                      >
+                                                        <td
+                                                          style="
+                                                            width: 90%;
+                                                            background-color: #ffffff;
+                                                            text-align: left;
+                                                            padding-bottom: 5px;
+                                                            padding-top: 5px;
+                                                          "
+                                                        >
+                                                          User Agent:
+                                                        </td>
+                                                        <td
+                                                          style="
+                                                            width: 90%;
+                                                            background-color: #ffffff;
+                                                          "
+                                                        >
+                                                          ${data.ua}
+                                                        </td>
+                                                      </tr>
+                                                    </tbody>
+                                                  </table>
+                                                  <!-- Message body -->
                                                   <table
                                                     class="module"
                                                     role="module"
@@ -291,16 +497,47 @@
                                                             <div
                                                               style="
                                                                 font-family: inherit;
-                                                                text-align: center;
+                                                                text-align: left;
                                                               "
                                                             >
-                                                              <span style="font-size: 18px;">
-                                                                If you did, please verify
-                                                                your email address
-                                                                so you can log in
-                                                                to this insanely
-                                                                useful app.</span>
+                                                              <span
+                                                                style="
+                                                                  font-size: 12px;
+                                                                "
+                                                                >If you're aware
+                                                                of this sign-in,
+                                                                please disregard
+                                                                this notice. This
+                                                                can happen when
+                                                                you use your
+                                                                browser's
+                                                                incognito or
+                                                                private browsing
+                                                                mode, or clear
+                                                                your cookies.
+                                                              </span>
                                                             </div>
+                                                            <br />
+                                                            <div
+                                                              style="
+                                                                font-family: inherit;
+                                                                text-align: left;
+                                                              "
+                                                            >
+                                                              <span
+                                                                style="
+                                                                  font-size: 12px;
+                                                                "
+                                                              >
+                                                                If you believe
+                                                                that this sign-in
+                                                                is suspicious,
+                                                                please reset your
+                                                                password
+                                                                immediately.
+                                                              </span>
+                                                            </div>
+                                                            <br />
                                                             <div
                                                               style="
                                                                 font-family: inherit;
@@ -318,17 +555,6 @@
                                                                 ></span
                                                               >
                                                               <br />
-                                                              <span
-                                                                style="
-                                                                  color: #000000;
-                                                                  font-size: 10px;
-                                                                "
-                                                                >If you did not
-                                                                initiate this
-                                                                request, please
-                                                                disregard this
-                                                                email.
-                                                              </span>
                                                             </div>
                                                             <div></div>
                                                           </div>
@@ -336,6 +562,7 @@
                                                       </tr>
                                                     </tbody>
                                                   </table>
+                                                  <!-- Spacer table -->
                                                   <table
                                                     class="module"
                                                     role="module"
@@ -360,6 +587,7 @@
                                                       </tr>
                                                     </tbody>
                                                   </table>
+                                                  <!-- Action button -->
                                                   <table
                                                     border="0"
                                                     cellpadding="0"
@@ -430,7 +658,8 @@
                                                                       font-family: inherit;
                                                                     "
                                                                     target="_blank"
-                                                                    >Verify Email
+                                                                    >Reset
+                                                                    Password
                                                                     Now</a
                                                                   >
                                                                 </td>
@@ -485,4 +714,8 @@
         </div>
       </center>
     </body>
-  </html> 
+  </html>
+      `
+}
+
+module.exports = body

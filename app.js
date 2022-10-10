@@ -1,29 +1,59 @@
 require('dotenv').config()
 const express = require('express')
+const cors = require('cors')
 const nodemailer = require('nodemailer')
 const mongoose = require('mongoose')
 const session = require('express-session')
 const passport = require('passport')
+const helmet = require('helmet')
+const { v4: uuid } = require('uuid')
 
-//const path = require('path') // pretty sure I don't need this
+const userModel = require('./models/user.model')
+const authRoutes = require('./routes/router')
 
-const emailRoute = require('./routes/users.routes')
 require('./config/passport')(passport)
 
 const app = express()
+app.use(cors())
 
+const maxAge = 2 * 60 * 60
 //Express session
 app.use(
   session({
-    secret: 'secret',
+    secret: process.env.SECRET,
     resave: true,
     saveUninitialized: true,
+    cookie: { maxAge: maxAge },
   })
 )
+
+// Security headers
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      'script-src': ["'self'", 'cdn.jsdelivr.net'],
+      'img-src': ["'self'", 'uilogos.co'],
+      'style-src': ["'self'", 'cdn.jsdelivr.net'],
+    },
+  })
+)
+
+/* 
+TODO: finish nonce
+https://github.com/marcomontalbano/test-nonce/blob/master/server.js
+*/
+app.use((req, res, next) => {
+  res.locals.nonce = uuid()
+  next()
+})
 
 //passport middleware
 app.use(passport.initialize())
 app.use(passport.session())
+
+passport.use(userModel.createStrategy())
+passport.serializeUser(userModel.serializeUser())
+passport.deserializeUser(userModel.deserializeUser())
 
 mongoose
   .connect(process.env.MONGO_URI, {
@@ -38,29 +68,16 @@ mongoose
   })
 
 const bodyParser = require('body-parser')
+app.use(bodyParser.urlencoded({ extended: false }))
+
 app.use(bodyParser.json()) // not sure I need this
-//const cookieParser = require('cookie-parser')
-//app.use(cookieParser()) // not needed with passport
 
-app.use('/', emailRoute)
+app.use('/api', authRoutes)
 
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   res.send('welcome to express app')
 })
 
-/* app.get('/email', (req, res) => {
-  try {
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log('nodemailer error: ', error)
-      } else {
-        console.log('Email sent: ' + info.response)
-      }
-    })
-  } catch (err) {
-    console.log('express error: ', err)
-  }
-}) */
 const PORT = process.env.PORT || 8080
 app.listen(PORT, (err) => {
   if (err) throw err

@@ -1,4 +1,4 @@
-const body = (name, email, link) => {
+const body = (name, link) => {
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
   <html data-editor-version="2" xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -251,9 +251,20 @@ const body = (name, email, link) => {
                                                                 text-align: center;
                                                               "
                                                             >
-                                                              <span style="font-size: 43px;">
-                                                                Thanks for signing
-                                                                up, ${name}!
+                                                              <span
+                                                                style="
+                                                                  font-size: 43px;
+                                                                "
+                                                              >
+                                                                Greetings, ${name}!
+                                                              </span>
+                                                              <br />
+                                                              <span
+                                                                style="
+                                                                  font-size: 23px;
+                                                                "
+                                                              >
+                                                                Did you request a password reset?
                                                               </span>
                                                             </div>
                                                             <div></div>
@@ -301,10 +312,7 @@ const body = (name, email, link) => {
                                                                   font-size: 18px;
                                                                 "
                                                                 >Please verify
-                                                                your email address
-                                                                so you can log in
-                                                                to this insanely
-                                                                useful app.</span
+                                                                your email address.</span
                                                               >
                                                             </div>
                                                             <div
@@ -491,8 +499,8 @@ const body = (name, email, link) => {
         </div>
       </center>
     </body>
-  </html>  
-  `
+  </html>   
+    `
 }
 
 module.exports = body

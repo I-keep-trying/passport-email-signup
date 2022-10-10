@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
+const passportLocalMongoose = require('passport-local-mongoose')
 const Schema = mongoose.Schema
 
 const userSchema = new Schema(
@@ -18,6 +19,8 @@ const userSchema = new Schema(
     },
   }
 )
+
+userSchema.plugin(passportLocalMongoose, { usernameField: 'email' })
 
 const User = mongoose.model('user', userSchema)
 module.exports = User
