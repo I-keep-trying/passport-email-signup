@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "dev": "nodemon index.js",
-    "start": "node --inspect index.js"
+    "dev2": "node --inspect index.js",
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
