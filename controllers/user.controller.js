@@ -234,13 +234,14 @@ exports.Login = async (req, res) => {
       })
     }
     //Success
-    await emailVerify(
+/*   /// Temporarily removing to troubleshoot publishing 
+  await emailVerify(
       user.name,
       email,
       'https://passport-email-signup-production.up.railway.app/forgot',
       'login',
       userData
-    )
+    ) */
 
     return res
       .cookie('access_token', token, {
