@@ -5,6 +5,7 @@ const forgot = require('../email_templates/forgot_password.js')
 const login = require('../email_templates/login_success')
 
 const emailVerify = async (name, email, url, event, data) => {
+console.log('emailVerify',data)
   try {
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',

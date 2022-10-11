@@ -182,6 +182,7 @@ exports.GetLogin = async (req, res) => {
 exports.Login = async (req, res) => {
   try {
     const body = await userSchema.validate(req.body)
+    console.log('req.body',req.body)
     if (body.error) {
       return res.status(400).json({
         error: true,
