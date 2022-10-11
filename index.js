@@ -92,5 +92,5 @@ const nodemailer = require('nodemailer')
 const PORT = process.env.PORT || 8080
 
 app.listen(PORT, () => {
-  console.log(`Listening on localhost:${PORT}`)
+  console.log(`Listening on ${PORT}`)
 })

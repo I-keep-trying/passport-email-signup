@@ -84,7 +84,8 @@ exports.Signup = async (req, res) => {
       process.env.SECRET
     )
 
-    const activationUrl = `http://localhost:8080/api/activation/${event}/${code}`
+    // const activationUrl = `http://localhost:8080/api/activation/${event}/${code}`
+    const activationUrl = `https://passport-email-signup-production.up.railway.app/api/activation/${event}/${code}`
 
     const sendMail = await emailVerify(
       newOrUpdatedUser.name,
@@ -144,7 +145,7 @@ exports.Activation = async (req, res) => {
       // User.deleteUser(data.userId) // not 100% sure about this. What if user accidentally clicks an old link.
       return res.status(400).json({
         message:
-          'Sorry, this activation link has expired. Please register again. http://localhost:8080/signup',
+          'Sorry, this activation link has expired. Please register again. https://passport-email-signup-production.up.railway.app/login',
       })
     }
 
@@ -163,7 +164,8 @@ exports.Activation = async (req, res) => {
     await user.save()
     return res
       .status(200)
-      .json({ message: 'Successfully activated, you may now log in.' }) //.redirect('http://localhost:3000/login')
+      .json({ message: 'Successfully activated, you may now log in.' })
+      .redirect('https://passport-email-signup-production.up.railway.app/login')
   } catch (error) {
     console.error('activation-error', error)
     return res.status(500).json({
@@ -235,7 +237,7 @@ exports.Login = async (req, res) => {
     await emailVerify(
       user.name,
       email,
-      'http://localhost:3006/forgot',
+      'https://passport-email-signup-production.up.railway.app/forgot',
       'login',
       userData
     )
@@ -292,8 +294,8 @@ exports.ForgotPw = async (req, res) => {
       process.env.SECRET
     )
 
-    const activationUrl = `http://localhost:8080/api/activation/${req.body.event}/${code}`
-
+    // const activationUrl = `http://localhost:8080/api/activation/${req.body.event}/${code}`
+    const activationUrl = `https://passport-email-signup-production.up.railway.app/api/activation/${req.body.event}/${code}`
     const sendMail = await emailVerify(
       user.name,
       user.email,
@@ -404,7 +406,7 @@ exports.Edit = async (req, res) => {
     user.save()
     return res.status(200).json({
       success: true,
-      message: 'Successfully updated your user record.'
+      message: 'Successfully updated your user record.',
     })
   } catch (err) {
     console.log('Edit error: ', err)
