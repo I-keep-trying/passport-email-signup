@@ -178,7 +178,7 @@ exports.GetLogin = async (req, res) => {
 }
 
 exports.Login = async (req, res) => {
- // console.log('Login req.body', req.body)
+  // console.log('Login req.body', req.body)
   try {
     const body = await userSchema.validate(req.body)
     if (body.error) {
@@ -296,7 +296,7 @@ exports.ForgotPw = async (req, res) => {
 
     // const activationUrl = `http://localhost:8080/api/activation/${req.body.event}/${code}`
     const activationUrl = `https://passport-email-signup-production.up.railway.app/api/activation/${req.body.event}/${code}`
-    const resetUrl = `https://passport-email-signup-production.up.railway.app/api/reset`
+    const resetUrl = `https://passport-email-signup-production.up.railway.app/forgot`
     const sendMail = await emailVerify({
       name: user.name,
       email: user.email,
@@ -324,7 +324,7 @@ exports.ResetPw = async (req, res) => {
   // Forgot pw requires user verification by email.
   // Reset requires matching old/current password, so no email verification is needed.
   const body = await req.body
-  console.log('resetpw req.body',body)
+  console.log('resetpw req.body', body)
   try {
     const oldPassword = req.body.oldPassword
     const password = req.body.password
