@@ -10,9 +10,24 @@ const LocalStrategy = require('passport-local').Strategy
 const bcrypt = require('bcryptjs')
 
 const User = require('./models/user.model')
-
 const router = require('./routes/router')
 
+const app = express()
+
+app.use(
+  session({
+    genid: (req) => {
+      return uuid()
+    },
+    store: new FileStore(),
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      maxAge: 12 * 60 * 60 * 1000,
+    },
+  })
+)
 
 mongoose
   .connect(process.env.MONGO_URI, {
@@ -60,27 +75,10 @@ passport.deserializeUser(async (id, done) => {
   return done(null, user)
 })
 
-const app = express()
-
 app.use(express.static('build'))
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-
-app.use(
-  session({
-    genid: (req) => {
-      return uuid()
-    },
-    store: new FileStore(),
-    secret: process.env.SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      maxAge:  12 * 60 * 60 * 1000 
-    }
-  })
-)
 
 app.use(passport.initialize())
 app.use(passport.session())

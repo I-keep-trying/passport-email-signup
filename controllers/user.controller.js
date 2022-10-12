@@ -87,12 +87,14 @@ exports.Signup = async (req, res) => {
     // const activationUrl = `http://localhost:8080/api/activation/${event}/${code}`
     const activationUrl = `https://passport-email-signup-production.up.railway.app/api/activation/${event}/${code}`
 
-    const sendMail = await emailVerify(
-      newOrUpdatedUser.name,
-      newOrUpdatedUser.email,
-      activationUrl,
-      event
-    )
+    const sendMail = await emailVerify({
+      name: newOrUpdatedUser.name,
+      email: newOrUpdatedUser.email,
+      url: activationUrl,
+      url2: 'otherUrl',
+      event,
+      data: null,
+    })
 
     return res
       .status(200)
@@ -104,10 +106,6 @@ exports.Signup = async (req, res) => {
       message: 'Cannot Register User',
     })
   }
-}
-
-exports.Test = async (req, res) => {
-  return res.json({ message: 'Content only for logged in users.' })
 }
 
 exports.Thanks = async (req, res) => {
@@ -180,9 +178,9 @@ exports.GetLogin = async (req, res) => {
 }
 
 exports.Login = async (req, res) => {
+ // console.log('Login req.body', req.body)
   try {
     const body = await userSchema.validate(req.body)
-    console.log('req.body',req.body)
     if (body.error) {
       return res.status(400).json({
         error: true,
@@ -235,13 +233,14 @@ exports.Login = async (req, res) => {
       })
     }
     //Success
-    await emailVerify(
-      user.name,
+    await emailVerify({
+      name: user.name,
       email,
-      'https://passport-email-signup-production.up.railway.app/forgot',
-      'login',
-      userData
-    ) 
+      url: 'https://passport-email-signup-production.up.railway.app/forgot',
+      url2: 'otherUrl',
+      event: 'login',
+      data: userData,
+    })
 
     return res
       .cookie('access_token', token, {
@@ -297,12 +296,15 @@ exports.ForgotPw = async (req, res) => {
 
     // const activationUrl = `http://localhost:8080/api/activation/${req.body.event}/${code}`
     const activationUrl = `https://passport-email-signup-production.up.railway.app/api/activation/${req.body.event}/${code}`
-    const sendMail = await emailVerify(
-      user.name,
-      user.email,
-      activationUrl,
-      'forgot'
-    )
+    const resetUrl = `https://passport-email-signup-production.up.railway.app/api/reset`
+    const sendMail = await emailVerify({
+      name: user.name,
+      email: user.email,
+      url: activationUrl,
+      url2: resetUrl,
+      event: 'forgot',
+      data: null,
+    })
 
     return res.send({
       success: true,
@@ -322,6 +324,7 @@ exports.ResetPw = async (req, res) => {
   // Forgot pw requires user verification by email.
   // Reset requires matching old/current password, so no email verification is needed.
   const body = await req.body
+  console.log('resetpw req.body',body)
   try {
     const oldPassword = req.body.oldPassword
     const password = req.body.password

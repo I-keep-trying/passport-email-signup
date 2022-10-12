@@ -4,8 +4,10 @@ const register = require('../email_templates/register_user.js')
 const forgot = require('../email_templates/forgot_password.js')
 const login = require('../email_templates/login_success')
 
-const emailVerify = async (name, email, url, event, data) => {
-console.log('emailVerify',data)
+const emailVerify = async (params) => {
+//  console.log('emailVerify params: ', params)
+  //params: name, email, url, event, data
+  const { name, email, url, url2, event, data } = params
   try {
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
@@ -25,7 +27,7 @@ console.log('emailVerify',data)
       if (event === 'register') {
         return register(name, url)
       } else if (event === 'forgot') {
-        return forgot(name, url)
+        return forgot(name, url, url2)
       } else if (event === 'login') {
         return login(name, email, url, data)
       }
