@@ -27,6 +27,18 @@ const userSchema = Joi.object().keys({
   }),
 })
 
+exports.GetSignup = (req, res) => {
+  res.send(`You got the signup page!`)
+}
+
+exports.GetLogin = async (req, res) => {
+  res.send(`You got the login page!`)
+}
+
+exports.GetForgot = async (req, res) => {
+  res.send(`You got the reset password page!`)
+}
+
 exports.Signup = async (req, res) => {
   try {
     const result = userSchema.validate(req.body)
@@ -173,10 +185,6 @@ exports.Activation = async (req, res) => {
   }
 }
 
-exports.GetLogin = async (req, res) => {
-  res.send(`You got the login page!`)
-}
-
 exports.Login = async (req, res) => {
   // console.log('Login req.body', req.body)
   try {
@@ -294,9 +302,14 @@ exports.ForgotPw = async (req, res) => {
       process.env.SECRET
     )
 
-    // const activationUrl = `http://localhost:8080/api/activation/${req.body.event}/${code}`
-    const activationUrl = `https://passport-email-signup-production.up.railway.app/api/activation/${req.body.event}/${code}`
-    const resetUrl = `https://passport-email-signup-production.up.railway.app/forgot`
+    const activationUrl =
+      process.env.NODE_ENV === production
+        ? `https://passport-email-signup-production.up.railway.app/api/activation/${req.body.event}/${code}`
+        : `http://localhost:8080/api/activation/${req.body.event}/${code}`
+    const resetUrl =
+      process.env.NODE_ENV === production
+        ? `https://passport-email-signup-production.up.railway.app/forgot`
+        : `http://localhost:8080/forgot`
     const sendMail = await emailVerify({
       name: user.name,
       email: user.email,

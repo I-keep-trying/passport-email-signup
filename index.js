@@ -1,4 +1,5 @@
 require('dotenv').config()
+const path = require('path')
 const express = require('express')
 const mongoose = require('mongoose')
 const session = require('express-session')
@@ -13,6 +14,8 @@ const User = require('./models/user.model')
 const router = require('./routes/router')
 
 const app = express()
+
+app.use(express.static(path.join(__dirname, 'build')))
 
 app.use(
   session({
@@ -75,7 +78,7 @@ passport.deserializeUser(async (id, done) => {
   return done(null, user)
 })
 
-app.use(express.static('build'))
+//app.use(express.static('build'))
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -85,7 +88,13 @@ app.use(passport.session())
 
 app.use('/api', router)
 
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'))
+})
+
 const nodemailer = require('nodemailer')
+
+console.log('process.env', process.env.NODE_ENV)
 
 const PORT = process.env.PORT || 8080
 

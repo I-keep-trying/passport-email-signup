@@ -4,9 +4,9 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon index.js",
-    "dev2": "node --inspect index.js",
-    "start": "node index.js"
+    "dev": "SET NODE_ENV=development & nodemon index.js",
+    "dev2": "SET NODE_ENV=development & node --inspect index.js",
+    "start": "SET NODE_ENV=production & node index.js"
   },
   "keywords": [],
   "author": "",
