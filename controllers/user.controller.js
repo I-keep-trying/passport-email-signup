@@ -27,6 +27,8 @@ const userSchema = Joi.object().keys({
   }),
 })
 
+const env = process.env.NODE_ENV === 'production' ? 'production' : 'development'
+
 exports.GetSignup = (req, res) => {
   res.send(`You got the signup page!`)
 }
@@ -97,7 +99,10 @@ exports.Signup = async (req, res) => {
     )
 
     // const activationUrl = `http://localhost:8080/api/activation/${event}/${code}`
-    const activationUrl = `https://passport-email-signup-production.up.railway.app/api/activation/${event}/${code}`
+    const activationUrl =
+      env === 'production'
+        ? `https://passport-email-signup-production.up.railway.app/api/activation/${event}/${code}`
+        : `http://localhost:8080/api/activation/${event}/${code}`
 
     const sendMail = await emailVerify({
       name: newOrUpdatedUser.name,
@@ -172,10 +177,12 @@ exports.Activation = async (req, res) => {
 
     user.active = true
     await user.save()
+    res.redirect(
+      'https://passport-email-signup-production.up.railway.app/login'
+    )
     return res
       .status(200)
       .json({ message: 'Successfully activated, you may now log in.' })
-      .redirect('https://passport-email-signup-production.up.railway.app/login')
   } catch (error) {
     console.error('activation-error', error)
     return res.status(500).json({
@@ -186,7 +193,7 @@ exports.Activation = async (req, res) => {
 }
 
 exports.Login = async (req, res) => {
-  // console.log('Login req.body', req.body)
+  console.log('Login req.body', req.body)
   try {
     const body = await userSchema.validate(req.body)
     if (body.error) {
@@ -302,14 +309,19 @@ exports.ForgotPw = async (req, res) => {
       process.env.SECRET
     )
 
+    const env =
+      process.env.NODE_ENV === 'production' ? 'production' : 'development'
+
     const activationUrl =
-      process.env.NODE_ENV === production
+      env === 'production'
         ? `https://passport-email-signup-production.up.railway.app/api/activation/${req.body.event}/${code}`
         : `http://localhost:8080/api/activation/${req.body.event}/${code}`
+
     const resetUrl =
-      process.env.NODE_ENV === production
+      env === 'production'
         ? `https://passport-email-signup-production.up.railway.app/forgot`
         : `http://localhost:8080/forgot`
+
     const sendMail = await emailVerify({
       name: user.name,
       email: user.email,
@@ -431,6 +443,5 @@ exports.Edit = async (req, res) => {
 }
 
 exports.Router = (req, res) => {
-  console.log('Router Working')
-  res.end()
+  return res.json(req.session)
 }
