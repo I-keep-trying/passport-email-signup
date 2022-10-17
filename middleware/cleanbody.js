@@ -1,6 +1,7 @@
 const sanitize = require('mongo-sanitize')
 
 module.exports = (req, res, next) => {
+  console.log('sanitize')
   try {
     req.body = sanitize(req.body)
     next()

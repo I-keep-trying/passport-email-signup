@@ -29,6 +29,19 @@ const userSchema = Joi.object().keys({
 
 const env = process.env.NODE_ENV === 'production' ? 'production' : 'development'
 
+const authSession = async (req, res) => {
+  try {
+    const id = req.session.user
+    console.log('session user id: ', id)
+    const user = await User.findOne({
+      userId: id,
+    })
+    console.log('user found by id: ', user)
+  } catch (err) {
+    console.log('authSession error: ', err)
+  }
+}
+
 exports.GetSignup = (req, res) => {
   res.send(`You got the signup page!`)
 }
@@ -193,9 +206,9 @@ exports.Activation = async (req, res) => {
 }
 
 exports.Login = async (req, res) => {
-  console.log('Login req.body', req.body)
   try {
     const body = await userSchema.validate(req.body)
+
     if (body.error) {
       return res.status(400).json({
         error: true,
@@ -238,7 +251,7 @@ exports.Login = async (req, res) => {
     }
 
     req.session.user = user.userId
-
+//console.log('req.session',req.session)
     const { error, token } = await generateJwt(user.email, user.userId)
 
     if (error) {
@@ -279,13 +292,16 @@ exports.Login = async (req, res) => {
   }
 }
 
-exports.Logout = (req, res) => {
+exports.Logout = (req, res, next) => {
   // passport adds the 'req.logout' function
-  req.logout(function (err) {
+  console.log('Logout req.session: ', req.session)
+  /*  req.logout(function (err) {
+  
     if (err) {
       return next(err)
     }
-  })
+  }) */
+  req.session.destroy()
   res.json('You are logged out')
 }
 
@@ -443,5 +459,6 @@ exports.Edit = async (req, res) => {
 }
 
 exports.Router = (req, res) => {
+  console.log('route "/" req.session', req.session)
   return res.json(req.session)
 }

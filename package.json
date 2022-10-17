@@ -4,9 +4,10 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "dev": "SET NODE_ENV=development & nodemon index.js",
+    "dev": "SET NODE_ENV=development & nodemon --ignore sessions/ index.js",
     "dev2": "SET NODE_ENV=development & node --inspect index.js",
-    "start": "SET NODE_ENV=production & node index.js"
+    "start": "SET NODE_ENV=production & node index.js",
+    "dev3": "SET NODE_ENV=development & nodemon index2.js"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +16,7 @@
     "axios": "^0.27.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
+    "connect-mongo": "^4.6.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
