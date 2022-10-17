@@ -20,57 +20,7 @@ app.use(bodyParser.json())
 app.use(express.static(path.join(__dirname, 'build')))
 
 const fileStore = new FileStore()
-/*
 
-console.log('fileStore: ',fileStore)
-FileStore {
-  _events: [Object: null prototype] {},
-  _eventsCount: 0,
-  _maxListeners: undefined,
-  options: {
-    path: 'sessions',
-    ttl: 3600,
-    retries: 5,
-    factor: 1,
-    minTimeout: 50,
-    maxTimeout: 100,
-    reapInterval: 3600,
-    reapMaxConcurrent: 10,
-    reapAsync: false,
-    reapSyncFallback: false,
-    logFn: [Function: log],
-    encoding: 'utf8',
-    encoder: [Function: stringify],
-    decoder: [Function: parse],
-    encryptEncoding: 'hex',
-    fileExtension: '.json',
-    crypto: { algorithm: 'aes-256-gcm', hashing: 'sha512', use_scrypt: true },
-    keyFunction: [Function: keyFunction],
-    filePattern: /\.json$/,
-    reapIntervalObject: Timeout {
-      _idleTimeout: 3600000,
-      _idlePrev: [TimersList],
-      _idleNext: [TimersList],
-      _idleStart: 770,
-      _onTimeout: [Function (anonymous)],
-      _timerArgs: undefined,
-      _repeat: 3600000,
-      _idlePrev: [TimersList],
-      _idleNext: [TimersList],
-      _idleStart: 770,
-      _onTimeout: [Function (anonymous)],
-      _timerArgs: undefined,
-      _repeat: 3600000,
-      _destroyed: false,
-      [Symbol(refed)]: false,
-      [Symbol(kHasPrimitive)]: false,
-      [Symbol(asyncId)]: 8,
-      [Symbol(triggerId)]: 1
-    }
-  },
-  [Symbol(kCapture)]: false
-}
- */
 app.use(
   session({
     genid: (req) => {
