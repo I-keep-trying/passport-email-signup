@@ -9,11 +9,12 @@ const uuid = require('uuid').v4
 const bodyParser = require('body-parser')
 const LocalStrategy = require('passport-local').Strategy
 const bcrypt = require('bcryptjs')
+const helmet = require('helmet')
 
 const User = require('./models/user.model')
 
 const app = express()
-
+app.use(helmet())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
@@ -81,7 +82,7 @@ passport.serializeUser((user, done) => {
 })
 
 passport.deserializeUser(async (id, done) => {
-   console.log('passport.deserialize', id)
+  console.log('passport.deserialize', id)
   const user = await User.findById(id)
   return done(null, user)
 })
