@@ -7,7 +7,7 @@
     "dev": "SET NODE_ENV=development & nodemon --ignore sessions/ index.js",
     "dev2": "SET NODE_ENV=development & node --inspect index.js",
     "start": "SET NODE_ENV=production & node index.js",
-    "dev3": "SET NODE_ENV=development & nodemon index2.js"
+    "dev3": "SET NODE_ENV=development & nodemon index.js"
   },
   "keywords": [],
   "author": "",

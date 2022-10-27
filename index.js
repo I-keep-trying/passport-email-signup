@@ -14,7 +14,19 @@ const helmet = require('helmet')
 const User = require('./models/user.model')
 
 const app = express()
-app.use(helmet())
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      'img-src': [
+        "'self'",
+        'data:',
+        'https://uilogos.co/img/logomark/nira.png',
+      ],
+    },
+  })
+)
+
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
@@ -77,12 +89,12 @@ passport.use(
 )
 
 passport.serializeUser((user, done) => {
-  console.log('passport.serialize', user)
+  // console.log('passport.serialize', user)
   done(null, user.id)
 })
 
 passport.deserializeUser(async (id, done) => {
-  console.log('passport.deserialize', id)
+  // console.log('passport.deserialize', id)
   const user = await User.findById(id)
   return done(null, user)
 })

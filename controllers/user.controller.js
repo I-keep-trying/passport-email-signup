@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken')
 const passport = require('passport')
 const Joi = require('joi')
 const nodemailer = require('nodemailer')
+const axios = require('axios')
 
 const { emailVerify } = require('../services/email')
 const User = require('../models/user.model')
@@ -40,6 +41,13 @@ const authSession = async (req, res) => {
   } catch (err) {
     console.log('authSession error: ', err)
   }
+}
+
+const getDeviceData = () => {
+  const req = axios.get(
+    `https://api.ipgeolocation.io/ipgeo?apiKey=${process.env.REACT_APP_GEO}`
+  )
+  return req.then((res) => res.data)
 }
 
 exports.GetSignup = (req, res) => {
@@ -90,6 +98,7 @@ exports.Signup = async (req, res) => {
       (await User.updateOne(
         { email: email },
         {
+          name: name,
           active: false,
           password: hash,
         }
@@ -251,7 +260,7 @@ exports.Login = async (req, res) => {
     }
 
     req.session.user = user.userId
-    //console.log('req.session',req.session)
+
     const { error, token } = await generateJwt(user.email, user.userId)
 
     if (error) {
@@ -294,7 +303,11 @@ exports.Login = async (req, res) => {
 
 exports.Logout = (req, res, next) => {
   req.session.destroy()
-  res.json('You are logged out')
+  // next, delete both cookies
+  res
+    .cookie('connect.sid', '', { expires: new Date(1) })
+    .cookie('access_token', '', { expires: new Date(1) })
+    .json('You are logged out')
 }
 
 exports.ForgotPw = async (req, res) => {
@@ -356,9 +369,9 @@ exports.ResetPw = async (req, res) => {
   // Forgot !== Reset
   // Forgot pw requires user verification by email.
   // Reset requires matching old/current password, so no email verification is needed.
-  const body = await req.body
-  console.log('resetpw req.body', body)
   try {
+    const body = await req.body
+    console.log('resetpw req', req.body)
     const oldPassword = req.body.oldPassword
     const password = req.body.password
     const email = req.body.email
@@ -450,7 +463,7 @@ exports.Edit = async (req, res) => {
   }
 }
 
-exports.Router = (req, res) => {
-  // console.log('route "/" req.session', req.session) // verified, passport session data is removed
-  return res.json(req.session)
+exports.Router = async (req, res) => {
+  const data = await getDeviceData()
+  return res.json(data)
 }
