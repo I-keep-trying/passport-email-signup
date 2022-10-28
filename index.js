@@ -25,8 +25,8 @@ app.use(
           'https://uilogos.co/img/logomark/nira.png',
         ],
       },
-      crossOriginResourcePolicy: { policy: 'same-site' },
     },
+    crossOriginResourcePolicy: { policy: 'same-site' },
   })
 )
 
