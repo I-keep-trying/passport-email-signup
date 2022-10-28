@@ -16,13 +16,15 @@ const User = require('./models/user.model')
 const app = express()
 
 app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      'img-src': [
-        "'self'",
-        'data:',
-        'https://uilogos.co/img/logomark/nira.png',
-      ],
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        'img-src': [
+          "'self'",
+          'data:',
+          'https://uilogos.co/img/logomark/nira.png',
+        ],
+      },
     },
   })
 )
