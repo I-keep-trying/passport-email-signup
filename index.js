@@ -24,7 +24,7 @@ app.use(
         'img-src': [
           "'self'",
           'data:',
-          'https://uilogos.co/img/logomark/nira.png',
+          'https://uilogos.co',
           'https://images.unsplash.com',
         ],
       },
