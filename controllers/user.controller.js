@@ -477,7 +477,8 @@ exports.Router = async (req, res) => {
 
 exports.Contact = async (req, res) => {
   try {
-    const result = userSchema.validate(req.body)
+    console.log('Contact req.body', req.body)
+    const result = messageSchema.validate(req.body)
     if (result.error) {
       console.log('Contact form, Joi error: ', result.error.message)
       return res.json({

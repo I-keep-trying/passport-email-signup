@@ -20,5 +20,6 @@ router.get('/forgot', AuthController.ForgotPw)
 router.post('/forgot', sanitize, AuthController.ForgotPw)
 router.post('/reset', sanitize, AuthController.ResetPw)
 router.post('/edit', sanitize, AuthController.Edit)
+router.post('/contact', sanitize, AuthController.Contact)
 
 module.exports = router
