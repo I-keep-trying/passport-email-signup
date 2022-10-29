@@ -7,6 +7,7 @@ const nodemailer = require('nodemailer')
 const axios = require('axios')
 
 const { emailVerify } = require('../services/email')
+const { emailContact } = require('../services/emailContactForm')
 const User = require('../models/user.model')
 const { generateJwt } = require('../services/generateJwt')
 const register = require('../email_templates/register_user.js')
@@ -26,6 +27,12 @@ const userSchema = Joi.object().keys({
     browser: Joi.string().max(64),
     ua: Joi.string().max(256),
   }),
+})
+
+const messageSchema = Joi.object().keys({
+  name: Joi.string().max(64),
+  email: Joi.string().email({ minDomainSegments: 2 }).max(64),
+  message: Joi.string().max(5000),
 })
 
 const env = process.env.NODE_ENV === 'production' ? 'production' : 'development'
@@ -126,7 +133,7 @@ exports.Signup = async (req, res) => {
         ? `https://passport-email-signup-production.up.railway.app/api/activation/${event}/${code}`
         : `http://localhost:8080/api/activation/${event}/${code}`
 
-    const sendMail = await emailVerify({
+    await emailVerify({
       name: newOrUpdatedUser.name,
       email: newOrUpdatedUser.email,
       url: activationUrl,
@@ -207,7 +214,7 @@ exports.Activation = async (req, res) => {
       .json({ message: 'Successfully activated, you may now log in.' })
   } catch (error) {
     console.error('activation-error', error)
-    return res.status(500).json({
+    return res.json({
       error: true,
       message: 'Cannot Activate User',
     })
@@ -466,4 +473,27 @@ exports.Edit = async (req, res) => {
 exports.Router = async (req, res) => {
   const data = await getDeviceData()
   return res.json(data)
+}
+
+exports.Contact = async (req, res) => {
+  try {
+    const result = userSchema.validate(req.body)
+    if (result.error) {
+      console.log('Contact form, Joi error: ', result.error.message)
+      return res.json({
+        error: true,
+        status: 400,
+        message: result.error.message,
+      })
+    }
+
+    await emailContact({
+      name: result.name,
+      email: result.email,
+      message: result.msg,
+    })
+  } catch (err) {
+    console.log('Contact error: ', err)
+    return res.status(500).json({ error: err })
+  }
 }

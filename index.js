@@ -10,10 +10,12 @@ const bodyParser = require('body-parser')
 const LocalStrategy = require('passport-local').Strategy
 const bcrypt = require('bcryptjs')
 const helmet = require('helmet')
-
+const cors = require('cors')
 const User = require('./models/user.model')
 
 const app = express()
+
+app.use(cors())
 
 app.use(
   helmet({
@@ -23,6 +25,7 @@ app.use(
           "'self'",
           'data:',
           'https://uilogos.co/img/logomark/nira.png',
+          'https://images.unsplash.com',
         ],
       },
     },
