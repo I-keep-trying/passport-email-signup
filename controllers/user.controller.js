@@ -68,7 +68,7 @@ const getEmailValidate = (params) => {
   )
   return req
     .then((res) => {
-      console.log('email validate res.data: ', res.data)
+      console.log('email validate res.headers: ', res.headers.connection)
       return res.data
     })
     .catch((err) => {
@@ -514,7 +514,6 @@ exports.Contact = async (req, res) => {
 
 exports.EmailValidator = async (req, res) => {
   const data = await getEmailValidate(req.params)
-  console.log('EmailValidator error? ',data)
-  console.log('EmailValidator response: ',res)
+
   return res.json(data)
 }
