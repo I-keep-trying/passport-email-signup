@@ -1,6 +1,7 @@
 require('dotenv').config()
 const path = require('path')
 const express = require('express')
+require('express-async-errors')
 const mongoose = require('mongoose')
 const session = require('express-session')
 const FileStore = require('session-file-store')(session)

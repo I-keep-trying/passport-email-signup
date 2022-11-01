@@ -30,9 +30,9 @@ const userSchema = Joi.object().keys({
 })
 
 const messageSchema = Joi.object().keys({
-  name: Joi.string().max(64),
+  name: Joi.string().max(64).allow(''),
   email: Joi.string().email({ minDomainSegments: 2 }).max(64),
-  message: Joi.string().max(5000),
+  message: Joi.string().required().max(5000),
 })
 
 const env = process.env.NODE_ENV === 'production' ? 'production' : 'development'
@@ -57,6 +57,26 @@ const getDeviceData = () => {
   return req.then((res) => res.data)
 }
 
+const getEmailValidate = (params) => {
+  const req = axios.get(
+    `https://api.apilayer.com/email_verification/check?email=${params.email}`,
+    {
+      headers: {
+        apikey: process.env.EMAIL_VALIDATE,
+      },
+    }
+  )
+  return req
+    .then((res) => {
+      console.log('email validate res.data: ', res.data)
+      return res.data
+    })
+    .catch((err) => {
+      console.log('getEmailValidate error: ', err)
+      return err
+    })
+}
+
 exports.GetSignup = (req, res) => {
   res.send(`You got the signup page!`)
 }
@@ -74,10 +94,8 @@ exports.Signup = async (req, res) => {
     const result = userSchema.validate(req.body)
 
     if (result.error) {
-      console.log('Signup Joi error: ', result.error.message)
-      return res.json({
+      return res.status(400).json({
         error: true,
-        status: 400,
         message: result.error.message,
       })
     }
@@ -127,7 +145,6 @@ exports.Signup = async (req, res) => {
       process.env.SECRET
     )
 
-    // const activationUrl = `http://localhost:8080/api/activation/${event}/${code}`
     const activationUrl =
       env === 'production'
         ? `https://passport-email-signup-production.up.railway.app/api/activation/${event}/${code}`
@@ -429,21 +446,20 @@ exports.ResetPw = async (req, res) => {
 
 exports.Edit = async (req, res) => {
   const editUserSchema = Joi.object().keys({
+    id: Joi.string(),
     name: Joi.string().max(64),
-    email: Joi.string().email({ minDomainSegments: 2 }).max(64),
   })
   try {
     const body = await editUserSchema.validate(req.body)
     if (body.error) {
-      console.log('body.error', body.error)
-      return res.status(400).json({
+      console.log('Joi validation error: ', body.error)
+      return res.json({
         error: true,
-        status: 400,
         message: body.error.details[0].message,
       })
     }
 
-    const user = await User.findOne({ email: req.body.email })
+    const user = await User.findOne({ userId: req.body.id })
 
     if (!user) {
       return res.status(404).json({
@@ -476,25 +492,29 @@ exports.Router = async (req, res) => {
 }
 
 exports.Contact = async (req, res) => {
-  try {
-    console.log('Contact req.body', req.body)
-    const result = messageSchema.validate(req.body)
-    if (result.error) {
-      console.log('Contact form, Joi error: ', result.error.message)
-      return res.json({
-        error: true,
-        status: 400,
-        message: result.error.message,
-      })
-    }
+  const result = await messageSchema.validate(req.body)
+  if (result.error) throw Error(result.error.message)
 
-    await emailContact({
-      name: result.name,
-      email: result.email,
-      message: result.msg,
-    })
-  } catch (err) {
-    console.log('Contact error: ', err)
-    return res.status(500).json({ error: err })
-  }
+  const send = await emailContact({
+    name: result.value.name,
+    email: result.value.email,
+    message: result.value.message,
+  })
+
+  return send.error
+    ? res.json({
+        success: false,
+        message: send.message,
+      })
+    : res.json({
+        success: true,
+        message: 'Thank you! Your message has been sent.',
+      })
+}
+
+exports.EmailValidator = async (req, res) => {
+  const data = await getEmailValidate(req.params)
+  console.log('EmailValidator error? ',data)
+  console.log('EmailValidator response: ',res)
+  return res.json(data)
 }
