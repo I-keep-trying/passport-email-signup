@@ -20,7 +20,7 @@ app.use(cors())
 
 app.use(
   helmet({
-    /*   contentSecurityPolicy: {
+    contentSecurityPolicy: {
       directives: {
         'img-src': [
           "'self'",
@@ -29,7 +29,7 @@ app.use(
           'https://images.unsplash.com',
         ],
       },
-    }, */
+    },
     crossOriginResourcePolicy: { policy: 'same-site' },
   })
 )
