@@ -2,7 +2,7 @@ require('dotenv').config()
 const nodemailer = require('nodemailer')
 const register = require('../email_templates/register_user.js')
 const forgot = require('../email_templates/forgot_password.js')
-const login = require('../email_templates/login_success')
+const login = require('../email_templates/login_success.js')
 
 const emailVerify = async (params) => {
   const { name, email, url, url2, event, data } = params

@@ -18,6 +18,7 @@ const userSchema = Joi.object().keys({
   email: Joi.string().email({ minDomainSegments: 2 }).max(64),
   password: Joi.string().required().min(8).max(64),
   event: Joi.string(),
+  avatar: Joi.string().allow(''),
   userData: Joi.object().keys({
     city: Joi.string().max(64),
     state: Joi.string().max(64),
@@ -31,7 +32,7 @@ const userSchema = Joi.object().keys({
 
 const messageSchema = Joi.object().keys({
   name: Joi.string().max(64).allow(''),
-  email: Joi.string().email({ minDomainSegments: 2 }).max(64),
+  email: Joi.string().email({ minDomainSegments: 2 }).max(64).allow(''),
   message: Joi.string().required().max(5000),
 })
 
@@ -72,7 +73,7 @@ const getEmailValidate = (params) => {
       return res.data
     })
     .catch((err) => {
-      console.log('getEmailValidate error: ', err)
+      console.log('getEmailValidate error: ', err.response.statusText)
       return err
     })
 }
@@ -90,6 +91,7 @@ exports.GetForgot = async (req, res) => {
 }
 
 exports.Signup = async (req, res) => {
+  console.log('Signup req.body: ', req.body)
   try {
     const result = userSchema.validate(req.body)
 
@@ -100,7 +102,7 @@ exports.Signup = async (req, res) => {
       })
     }
 
-    const { name, email, password, event } = req.body
+    const { name, email, password, avatar, event } = req.body
 
     const user = await User.findOne({
       email: email,
@@ -111,13 +113,20 @@ exports.Signup = async (req, res) => {
 
     const newUser =
       !user &&
-      (await new User({ name, email, password: hash, userId: id }).save())
+      (await new User({
+        name,
+        email,
+        avatar,
+        password: hash,
+        userId: id,
+      }).save())
 
     // If user exists, it seems safe to assume unaware of such.
     // Just update password, deactivate, send verification email,
     // and reactivate, as if user is new.
     // Why not. It's better than how most such situations are
     // usually handled. E.g., "You fucked up! Now you can never register."
+    // Email will be sent to ensure the request is legit
 
     user &&
       (await User.updateOne(
@@ -223,12 +232,14 @@ exports.Activation = async (req, res) => {
 
     user.active = true
     await user.save()
-    res.redirect(
-      'https://passport-email-signup-production.up.railway.app/login'
-    )
-    return res
-      .status(200)
-      .json({ message: 'Successfully activated, you may now log in.' })
+
+    const redirectLink =
+      env === 'production'
+        ? 'https://passport-email-signup-production.up.railway.app/login'
+        : 'http://localhost:3006/login'
+    return res.send({
+      message: 'Successfully activated, you may now log in.',
+    })
   } catch (error) {
     console.error('activation-error', error)
     return res.json({
@@ -315,6 +326,7 @@ exports.Login = async (req, res) => {
         id: user.userId,
         name: user.name,
         email: user.email,
+        avatar: user.avatar,
       })
   } catch (error) {
     console.error('Login error', error)
@@ -447,10 +459,12 @@ exports.ResetPw = async (req, res) => {
 exports.Edit = async (req, res) => {
   const editUserSchema = Joi.object().keys({
     id: Joi.string(),
-    name: Joi.string().max(64),
+    name: Joi.string().max(64).allow(''),
+    avatar: Joi.string().allow(''),
   })
   try {
     const body = await editUserSchema.validate(req.body)
+    console.log('joi validated body: ', body)
     if (body.error) {
       console.log('Joi validation error: ', body.error)
       return res.json({
@@ -474,9 +488,11 @@ exports.Edit = async (req, res) => {
         message: 'You must verify your email to activate your account',
       })
     }
-
-    user.name = req.body.name
-    user.save()
+    console.log('Edit body.name: ', body.value.name)
+    user.name = body.value.name
+    user.avatar = body.value.avatar
+    console.log('user document: ', user)
+    await user.save()
     return res.status(200).json({
       success: true,
       message: 'Successfully updated your user record.',

@@ -20,20 +20,10 @@ app.use(cors())
 
 app.use(
   helmet({
-   /*  contentSecurityPolicy: {
-      directives: {
-        'img-src': [
-          "'self'",
-          'data:',
-          'https://uilogos.co',
-          'https://images.unsplash.com',
-        ],
-      },
-    }, */
     crossOriginResourcePolicy: { policy: 'same-site' },
   })
 )
-
+app.disable('x-powered-by')
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
@@ -116,9 +106,14 @@ app.get('/*', function (req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'))
 })
 
-const nodemailer = require('nodemailer')
+app.use((req, res, next) => {
+  res.status(404).send("Sorry! 😢")
+})
 
-console.log('process.env', process.env.NODE_ENV)
+app.use((err, req, res, next) => {
+  console.error(err.stack)
+  res.status(500).send('Nope. 😑')
+})
 
 const PORT = process.env.PORT || 8080
 
